@@ -31,9 +31,16 @@ kb = [
 keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
 
 # клавиатура при старте чата
-@router.message(Command("start"))
-async def start_chat(message: Message):
-    await message.answer("Привет!", reply_markup=keyboard) 
+@router.message(Command('start'))
+async def start_chat(message: Message, users: list[int]):
+    await message.answer('Привет!')
+    await message.answer('Идёт процесс аунтефикации...')
+    existing_user = any(message.from_user.id == usr_id for usr_id in users)
+
+    if (existing_user):
+        await message.answer('Вы вошли в ситсему', reply_markup=keyboard)
+    else:
+        await message.answer('Это бот создавался не для тебя разбийник')
 
 # получение списка дел при клике на кнопку "Список дел"
 @router.message(F.text == 'Список дел')
